@@ -106,9 +106,7 @@
 
         {% if activity.rooms.count > 0 %}
             <dt>Default Rooms:</dt>
-            <dd>{% for room in activity.rooms.all %}
-                    {{ room }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}</dd>
+            <dd>{% activity.rooms.all|join:", " %}</dd>
         {% endif %}
         
     </dl>
@@ -199,13 +197,9 @@
         {% endfor %}
         </tbody>
         </table>
-        <br>
-        All meetings of this activity are not guaranteed to appear on this page.
-        <br>
-        <b>Activity schedules are not fixed, and may change. Check Eighth Period schedules.</b>
-        <br>
+        <p>All meetings of this activity are not guaranteed to appear on this page.</p>
+        <p><b>Activity schedules are not fixed and may change at any time. Check Eighth Period schedules for the most up-to-date information.</b></p>
     </section>
 
-    
 </div>
 {% endblock %}
