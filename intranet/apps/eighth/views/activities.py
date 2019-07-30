@@ -28,8 +28,7 @@ def activity_view(request, activity_id=None):
     activity = get_object_or_404(EighthActivity, id=activity_id)
     scheduled_activities = EighthScheduledActivity.objects.filter(activity=activity)
 
-    show_all = "show_all" in request.GET
-    if not show_all:
+    if "show_all" not in request.GET:
         first_date = timezone.localdate()
         first_block = EighthBlock.objects.get_first_upcoming_block()
         if first_block:
