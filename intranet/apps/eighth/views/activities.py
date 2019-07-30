@@ -1,7 +1,7 @@
 import csv
 import logging
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime
 from io import BytesIO
 
 from django.conf import settings
@@ -30,12 +30,12 @@ def activity_view(request, activity_id=None):
 
     show_all = "show_all" in request.GET
     if not show_all:
-        first_date = timezone.localtime(timezone.now()).date()
+        first_date = timezone.localdate()
         first_block = EighthBlock.objects.get_first_upcoming_block()
         if first_block:
             first_date = first_block.date
 
-        two_months = timezone.localtime(timezone.now()).date() + timedelta(weeks=8)
+        two_months = timezone.localdate() + timezone.timedelta(weeks=8)
         scheduled_activities = scheduled_activities.filter(block__date__gte=first_date, block__date__lte=two_months)
 
     scheduled_activities = scheduled_activities.order_by("block__date", "block__block_letter")
@@ -51,10 +51,10 @@ def chunks(l, n):
 
 
 def current_school_year():
-    if datetime.now().month <= settings.YEAR_TURNOVER_MONTH:
-        return datetime.now().year
+    if timezone.localtime().month <= settings.YEAR_TURNOVER_MONTH:
+        return timezone.localtime().year
     else:
-        return datetime.now().year + 1
+        return timezone.localtime().year + 1
 
 
 def generate_statistics_pdf(activities=None, start_date=None, all_years=False, year=None):
@@ -198,7 +198,7 @@ def calculate_statistics(activity, start_date=None, all_years=False, year=None, 
     old_blocks = 0
 
     if year is not None and year == settings.SENIOR_GRADUATION_YEAR:
-        start_date = datetime.today()
+        start_date = timezone.localdate()
 
     if start_date is None or future:
         filtered_activities = activities
